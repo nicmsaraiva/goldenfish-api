@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 public class ExpenseControllerTest {
-    
+
     private MockMvc mockMvc;
 
     @InjectMocks
@@ -43,7 +43,7 @@ public class ExpenseControllerTest {
     }
 
     @Test
-    public void testCreateExpense() throws Exception {
+    public void testCreateExpense_ValidData() throws Exception {
         CreateExpenseDTO createExpenseDTO = new CreateExpenseDTO();
         createExpenseDTO.setCategory("Food");
         createExpenseDTO.setPaymentType(PaymentType.CARD);
@@ -60,6 +60,26 @@ public class ExpenseControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void testCreateExpense_InvalidData() throws Exception {
+        CreateExpenseDTO createExpenseDTO = new CreateExpenseDTO();
+        createExpenseDTO.setCategory("Food");
+        createExpenseDTO.setPaymentType(PaymentType.CARD);
+        createExpenseDTO.setExpenseDate(null);
+        createExpenseDTO.setDescription("Carbonara");
+        createExpenseDTO.setExpenseValue(100.0);
+
+        when(expenseRepository.save(any(Expense.class))).thenReturn(null);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonRequest = objectMapper.writeValueAsString(createExpenseDTO);
+
+        mockMvc.perform(post("/expense")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest))
+                .andExpect(status().isBadRequest());
     }
 
     @Test

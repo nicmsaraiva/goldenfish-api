@@ -8,24 +8,29 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
+@Validated
 @RequestMapping("/expense")
 public class ExpenseController {
 
-    @Autowired(required = true)
+    @Autowired
     ExpenseRepository expenseRepository;
 
     @PostMapping
-    @Transactional
-    public ResponseEntity<String> create(@RequestBody CreateExpenseDTO createExpenseDTO) {
-        expenseRepository.save(new Expense(createExpenseDTO));
-        return new ResponseEntity<String>("Expense created!", HttpStatus.CREATED);
+    public ResponseEntity<String> create(@Valid @RequestBody CreateExpenseDTO createExpenseDTO) {
+        try {
+            expenseRepository.save(new Expense(createExpenseDTO));
+            return new ResponseEntity<String>("Expense created!", HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<String>("Failed to create a expense!", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping
