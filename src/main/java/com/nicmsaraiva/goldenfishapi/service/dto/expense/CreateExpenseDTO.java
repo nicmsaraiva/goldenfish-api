@@ -17,4 +17,5 @@ public class CreateExpenseDTO {
     private Date expenseDate;
     private Double expenseValue;
     private PaymentType paymentType;
+    private String description;
 }

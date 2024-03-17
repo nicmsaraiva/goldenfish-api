@@ -9,8 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/expense")
@@ -27,11 +27,24 @@ public class ExpenseController {
 
     @GetMapping
     public ResponseEntity<List<ReadExpenseDTO>> readAll() {
-        List<Expense> expenses = expenseRepository.findAll();
-        List<ReadExpenseDTO> readExpenseDTOS = new ArrayList<>();
-        for(Expense e : expenses) {
-            readExpenseDTOS.add(new ReadExpenseDTO(e));
-        }
+        List<ReadExpenseDTO> readExpenseDTOS = expenseRepository.findAll().stream().map(ReadExpenseDTO::new).toList();
         return new ResponseEntity<List<ReadExpenseDTO>>(readExpenseDTOS, HttpStatus.FOUND);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ReadExpenseDTO> readById(@PathVariable Long id) {
+        Optional<Expense> expenseOptional = expenseRepository.findById(id);
+        if (expenseOptional.isPresent()) {
+            ReadExpenseDTO readExpenseDTO = new ReadExpenseDTO(expenseOptional.get());
+            return ResponseEntity.ok(readExpenseDTO);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/values")
+    public ResponseEntity<Double> readAllExpenseValues() {
+        Double totalValue = expenseRepository.findAll().stream().mapToDouble(Expense::getExpenseValue).sum();
+        return ResponseEntity.ok(totalValue);
     }
 }

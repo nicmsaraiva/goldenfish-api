@@ -19,6 +19,7 @@ public class ReadExpenseDTO {
     private Date expenseDate;
     private Double expenseValue;
     private PaymentType paymentType;
+    private String description;
 
     public ReadExpenseDTO(Expense expense) {
         this.id = expense.getId();
@@ -26,5 +27,6 @@ public class ReadExpenseDTO {
         this.expenseDate = expense.getExpenseDate();
         this.expenseValue = expense.getExpenseValue();
         this.paymentType = expense.getPaymentType();
+        this.description = expense.getDescription();
     }
 }

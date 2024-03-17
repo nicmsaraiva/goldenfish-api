@@ -28,11 +28,13 @@ public class Expense {
     @NotBlank
     @Enumerated(EnumType.STRING)
     private PaymentType paymentType;
+    private String description;
 
     public Expense(CreateExpenseDTO expenseDTO) {
         this.category = expenseDTO.getCategory();
         this.expenseDate = expenseDTO.getExpenseDate();
         this.expenseValue = expenseDTO.getExpenseValue();
         this.paymentType = expenseDTO.getPaymentType();
+        this.description = expenseDTO.getDescription();
     }
 }
