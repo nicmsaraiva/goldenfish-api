@@ -1,10 +1,7 @@
 package com.nicmsaraiva.goldenfishapi.model;
 
 import com.nicmsaraiva.goldenfishapi.service.dto.expense.CreateExpenseDTO;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,16 +22,17 @@ public class Expense {
     @NotBlank
     private String category;
     @NotBlank
-    private Date date;
+    private Date expenseDate;
     @NotBlank
-    private Double value;
+    private Double expenseValue;
     @NotBlank
-    private Payment payment;
+    @Enumerated(EnumType.STRING)
+    private PaymentType paymentType;
 
     public Expense(CreateExpenseDTO expenseDTO) {
         this.category = expenseDTO.getCategory();
-        this.date = expenseDTO.getDate();
-        this.value = expenseDTO.getValue();
-        this.payment = expenseDTO.getPayment();
+        this.expenseDate = expenseDTO.getExpenseDate();
+        this.expenseValue = expenseDTO.getExpenseValue();
+        this.paymentType = expenseDTO.getPaymentType();
     }
 }
