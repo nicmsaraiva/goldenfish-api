@@ -1,11 +1,9 @@
 package com.nicmsaraiva.goldenfishapi.model;
 
 import com.nicmsaraiva.goldenfishapi.service.dto.expense.CreateExpenseDTO;
+import com.nicmsaraiva.goldenfishapi.service.dto.expense.ReadExpenseDTO;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
@@ -15,6 +13,8 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity(name = "expense")
+@Table(name = "expenses")
+@EqualsAndHashCode(of = "id")
 public class Expense {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,5 +36,14 @@ public class Expense {
         this.expenseValue = expenseDTO.getExpenseValue();
         this.paymentType = expenseDTO.getPaymentType();
         this.description = expenseDTO.getDescription();
+    }
+
+    public Expense(ReadExpenseDTO readExpenseDTO) {
+        this.id = readExpenseDTO.getId();
+        this.category = readExpenseDTO.getCategory();
+        this.expenseDate = readExpenseDTO.getExpenseDate();
+        this.expenseValue = readExpenseDTO.getExpenseValue();
+        this.paymentType = readExpenseDTO.getPaymentType();
+        this.description = readExpenseDTO.getDescription();
     }
 }

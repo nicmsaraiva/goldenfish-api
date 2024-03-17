@@ -4,9 +4,11 @@ import com.nicmsaraiva.goldenfishapi.model.Expense;
 import com.nicmsaraiva.goldenfishapi.repository.ExpenseRepository;
 import com.nicmsaraiva.goldenfishapi.service.dto.expense.CreateExpenseDTO;
 import com.nicmsaraiva.goldenfishapi.service.dto.expense.ReadExpenseDTO;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,10 +18,11 @@ import java.util.Optional;
 @RequestMapping("/expense")
 public class ExpenseController {
 
-    @Autowired
+    @Autowired(required = true)
     ExpenseRepository expenseRepository;
 
     @PostMapping
+    @Transactional
     public ResponseEntity<String> create(@RequestBody CreateExpenseDTO createExpenseDTO) {
         expenseRepository.save(new Expense(createExpenseDTO));
         return new ResponseEntity<String>("Expense created!", HttpStatus.CREATED);
@@ -28,7 +31,7 @@ public class ExpenseController {
     @GetMapping
     public ResponseEntity<List<ReadExpenseDTO>> readAll() {
         List<ReadExpenseDTO> readExpenseDTOS = expenseRepository.findAll().stream().map(ReadExpenseDTO::new).toList();
-        return new ResponseEntity<List<ReadExpenseDTO>>(readExpenseDTOS, HttpStatus.FOUND);
+        return new ResponseEntity<List<ReadExpenseDTO>>(readExpenseDTOS, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
